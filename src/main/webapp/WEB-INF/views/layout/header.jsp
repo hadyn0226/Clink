@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css">
 </head>
 <body>
 <div align="center">
@@ -18,8 +19,8 @@
 					<a href="${pageContext.request.contextPath }/login/logout">Logout</a> | 
 				</c:when>
 				<c:otherwise>
-					<a href="${pageContext.request.contextPath }/loginform">Login</a> | 
-					<a href="${pageContext.request.contextPath }/joinform">Join</a> | 
+					<a href="${pageContext.request.contextPath }/loginForm">Login</a> | 
+					<a href="${pageContext.request.contextPath }/joinForm">Join</a> | 
 				</c:otherwise>
 			</c:choose>
 			<a href="${pageContext.request.contextPath }/product/list">Shop</a> | 

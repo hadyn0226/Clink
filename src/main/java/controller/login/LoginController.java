@@ -1,5 +1,8 @@
 package controller.login;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +35,7 @@ public class LoginController {
 			msg = "회원가입 실패";
 		}
 		model.addAttribute("msg",msg);
-		return ViewPath.LOGIN + "result.jsp";
+		return ViewPath.LOGIN + "loginForm.jsp";
 	}
 	
 	@RequestMapping(value = "/checkId" ,produces = "application/text;charset=utf8" )
@@ -46,5 +49,30 @@ public class LoginController {
 			reStr = "1";
 		}
 		return reStr;
+	}
+	
+	@RequestMapping("/loginForm")
+	public String loginForm(HttpServletRequest request,String id) {
+		boolean check = false;
+		
+		if(id == null) {
+			Cookie[] cks = request.getCookies();
+			
+			if(cks != null) {
+				for(Cookie ck : cks) {
+					if(ck.getName().equals("ckid")) {
+						id = ck.getValue();
+						check = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		request.setAttribute("id", id);
+		request.setAttribute("check", check);
+		
+		return ViewPath.LOGIN + "loginForm.jsp";
+		
 	}
 }

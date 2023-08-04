@@ -9,6 +9,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css">
+<script src="${pageContext.request.contextPath}/resources/ajax/js/httpRequest.js"></script>
 </head>
 <body>
 <div align="center">
@@ -16,7 +17,7 @@
  			<c:choose>
 				<c:when test="${!empty login }">
 					<a href="${pageContext.request.contextPath }/user/mypage">MyPage</a> | 
-					<a href="${pageContext.request.contextPath }/login/logout">Logout</a> | 
+					<a href="${pageContext.request.contextPath }/logout">Logout</a> | 
 				</c:when>
 				<c:otherwise>
 					<a href="${pageContext.request.contextPath }/loginForm">Login</a> | 

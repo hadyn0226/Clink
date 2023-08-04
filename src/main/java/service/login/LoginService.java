@@ -27,4 +27,11 @@ public class LoginService {
 		return userDAO.getSalt(email);
 	}
 	
+	public UserVO login(UserVO userVO) {
+		System.out.println("Service");
+		System.out.println(userVO.getEmail());
+		System.out.println(userVO.getUserPassword());
+		return userDAO.login(userVO);
+	}
+	
 }

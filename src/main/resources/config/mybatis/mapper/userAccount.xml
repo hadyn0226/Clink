@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="login" resultType="uservo" parameterType="uservo">
-		SELECT * FROM USERACCOUNT WHERE USER_EMAIL = #{email} AND USER_EMAIL = #{userPassword}
+		SELECT * FROM USERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PASSWORD = #{userPassword}
 	</select>
 
 </mapper>

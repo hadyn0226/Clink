@@ -18,4 +18,8 @@ public class UserDAO {
 	public String getSalt(String email) {
 		return sqlSession.selectOne("user.getSalt", email);
 	}
+	
+	public UserVO login(UserVO userVO) {
+		return sqlSession.selectOne("user.login", userVO);
+	}
 }

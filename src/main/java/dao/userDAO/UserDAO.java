@@ -1,5 +1,7 @@
 package dao.userDAO;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 
 import vo.userVO.UserVO;
@@ -19,7 +21,11 @@ public class UserDAO {
 		return sqlSession.selectOne("user.getSalt", email);
 	}
 	
-	public UserVO login(UserVO userVO) {
+	public Map<String, Object> login(UserVO userVO) {
 		return sqlSession.selectOne("user.login", userVO);
+	}
+	
+	public int nextSeq() {
+		return sqlSession.selectOne("user.nextSeq");
 	}
 }

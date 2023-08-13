@@ -1,9 +1,15 @@
 package controller.login;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import common.Encry;
 import common.ViewPath;
 import service.login.LoginService;
+import vo.loginLogVO.LoginLogVO;
 import vo.userVO.UserVO;
 
 
 @Controller
-public class LoginController {
+public class LoginController{
 	private LoginService loginService;
-	
+
 	public LoginController(LoginService loginService) {
 		this.loginService = loginService;
 	}
@@ -30,11 +37,19 @@ public class LoginController {
 	}
 	
 	@RequestMapping("/join")
-	public String join(Model model, UserVO vo) {
+	public String join(Model model, UserVO vo, HttpServletRequest request) {
 		String msg = null;
+		String ip = getIp(request);
+		vo.setUserId(loginService.nextSeq());
+		LoginLogVO logvo = new LoginLogVO();
+		logvo.setUserNo(vo.getUserId());
+		logvo.setIp(ip);
+		logvo.setFailCnt(0);
+		logvo.setStat(0);
 		int su = loginService.insert(vo);
 		if(su != 0) {
 			msg = "회원가입 성공";
+			loginService.firstLog(logvo);
 		}else {
 			msg = "회원가입 실패";
 		}
@@ -46,9 +61,7 @@ public class LoginController {
 	@ResponseBody
 	public String checkId(String id) {
 		String reStr = "0";
-		System.out.println("ajax! : " + id);
 		String salt = loginService.getSalt(id);
-		System.out.println(salt);
 		if(salt == null) {
 			reStr = "1";
 		}
@@ -83,29 +96,44 @@ public class LoginController {
 	@RequestMapping("/login")
 	@ResponseBody
 	public String checkLogin(HttpServletRequest request,HttpServletResponse response,UserVO vo) {
+		int failCnt, stat, status;
 		System.out.println("login Controller");
+		String ip = getIp(request);
 		// �븫�샇�솕
 		String salt = loginService.getSalt(vo.getEmail());
 		if(salt == null) {
 			return "-1";
 		}
 		String password = vo.getUserPassword();
-		System.out.println(salt);
-		System.out.println(vo.getEmail());
-		System.out.println(vo.getUserPassword());
+//		System.out.println(salt);
+//		System.out.println(vo.getEmail());
+//		System.out.println(vo.getUserPassword());
 		password = Encry.encry(password, salt);
 		vo.setUserPassword(password);
-		UserVO checkVo = loginService.login(vo);
+		Map<String, Object> checkVo = loginService.login(vo);
+		
 		if(checkVo == null) {
+			loginService.increFail(vo.getEmail());
 			return "0";
 		}
-
+		failCnt = ((BigDecimal)checkVo.get("FAIL_CNT")).intValue() + 1;
+		if(failCnt >= 5) {
+			return "-2";
+		}
+		stat = ((BigDecimal)checkVo.get("STAT")).intValue();
+		if(stat == 1) {
+			return "2";
+		}
+		status = ((BigDecimal)checkVo.get("USER_STATUS")).intValue();
+		if(status == 2) {
+			return "3";
+		}
 		
-//		// �쑀���쓽 �긽�깭( 0,1,2 )
-		int no = checkVo.getUserId();
+//		System.out.println("FAIL_CNT : "+ checkVo.get("FAIL_CNT"));
+//		System.out.println("STAT : " + checkVo.get("STAT"));
+		int no = ((BigDecimal)checkVo.get("USER_ID")).intValue();
 		
-		
-//		// �쑀���쓽 �긽�깭( 0,1,2 )
+//		
 //		int st = loginService.checkStatus(vo);
 //		if(st == 2) {
 //			return "redirect:/uuser/joinform";
@@ -115,17 +143,20 @@ public class LoginController {
 		
 
 		if(no != 0) {
+			Map<String, Object> map = new HashMap<String, Object>();
 			request.getSession().setAttribute("login", no);
-			//�븘�씠�뵒 湲곗뼲�븯湲� 泥댄겕 �쑀臾�
+			map.put("userId", no);
+			map.put("ip", ip);
+			loginService.statIn(map);
 			String ckid = request.getParameter("ckid");
 			System.out.println("ckid : " + ckid);
 			
 			Cookie ck = null;
 			
-			//荑좏궎�뙆�씪 �씫�뼱 �삤湲�...
+			//
 			Cookie[] cks = request.getCookies();
 			
-			//湲곗〈 荑좏궎�뙆�씪 寃��깋
+			//
 			if(cks != null){
 				for(Cookie c : cks){
 					if(c.getName().equals("ckid")){
@@ -135,26 +166,26 @@ public class LoginController {
 				}
 			}
 			
-			if(ckid != null){ //泥댄겕 �릺�뼱 �엳�쓣�븣
-				if(ck == null){ // 荑좏궎�뙆�씪 �뾾�쓣�븣
+			if(ckid != null){ //
+				if(ck == null){ // 
 					ck = new Cookie("ckid",vo.getEmail());
 					
-					//root濡� 寃쎈줈 �꽕�젙
+					//
 					ck.setPath("/");
 				
-					//�쑀�슚�떆媛� �꽕�젙
+					//
 					ck.setMaxAge(60*60*24);
 				
-					//�겢�씪�씠�뼵�듃�뿉寃� 荑좏궎�뙆�씪 �깮�꽦
+					//
 					response.addCookie(ck);
-				}else{ //�엳�쓣�븣
+				}else{ //
 					if(!ck.getValue().equals(vo.getEmail())){
 						ck.setValue(vo.getEmail());
 						ck.setPath("/");
 						response.addCookie(ck);
 					}
 				}
-			}else{ // 泥댄겕 �븞�릺�뼱 �엳�쓣�븣
+			}else{ // 
 				if(ck != null){
 					if(ck.getValue().equals(vo.getEmail())){
 						ck.setPath("/");
@@ -168,9 +199,53 @@ public class LoginController {
 		return "1";
 	}
 	
+	@RequestMapping("/exit")
+	@ResponseBody
+	public void exit(HttpSession session) {
+		System.out.println("unload");
+		Integer no = (Integer)session.getAttribute("login");
+		if(no != null) {
+			loginService.statOut(no);
+		}
+	}
+	
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {
+		
+		Integer no = (Integer)session.getAttribute("login");
+		if(no != null) {
+			loginService.statOut(no);
+		}
 		session.invalidate();
 		return ViewPath.HOME;
 	}
+	
+	private String getIp(HttpServletRequest request) {
+		 String ip = request.getHeader("X-Forwarded-For");
+	        
+	        System.out.println(">>>> X-FORWARDED-FOR : " + ip);
+	 
+	        if (ip == null) {
+	            ip = request.getHeader("Proxy-Client-IP");
+	            System.out.println(">>>> Proxy-Client-IP : " + ip);
+	        }
+	        if (ip == null) {
+	            ip = request.getHeader("WL-Proxy-Client-IP"); // 웹로직
+	            System.out.println(">>>> WL-Proxy-Client-IP : " + ip);
+	        }
+	        if (ip == null) {
+	            ip = request.getHeader("HTTP_CLIENT_IP");
+	            System.out.println(">>>> HTTP_CLIENT_IP : " + ip);
+	        }
+	        if (ip == null) {
+	            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+	            System.out.println(">>>> HTTP_X_FORWARDED_FOR : " + ip);
+	        }
+	        if (ip == null) {
+	            ip = request.getRemoteAddr();
+	        }
+	        
+	        return ip;
+	}
+
 }

@@ -12,5 +12,8 @@
 		<bean id="UserDao" class="dao.userDAO.UserDAO">
 			<constructor-arg ref="sqlSession"></constructor-arg>	
 		</bean>
+		<bean id="LoginLogDao" class="dao.loginLogDAO.LoginLogDAO">
+			<constructor-arg ref="sqlSession"></constructor-arg>
+		</bean>
 		
 </beans>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginLog">
+	<!-- SQL문들을 작성하는 파일 -->
+	<insert id="firstLog" parameterType="loginlogvo">
+		INSERT INTO LOGIN_LOG (NO, USER_NO, UPDATED, IP) VALUES(LOOGINLOG_SEQ.NEXTVAL, #{userNo}, SYSDATE, #{ip})
+	</insert>
+	<update id="increFail" parameterType="String">
+		UPDATE login_log set FAIL_CNT = FAIL_CNT + 1 
+		WHERE USER_NO IN (
+			SELECT LL.USER_NO 
+			FROM USERACCOUNT UA, LOGIN_LOG LL 
+			WHERE UA.USER_ID = LL.USER_NO AND UA.USER_EMAIL = #{userEmail}
+		)
+	</update>
+	<update id="stat1" parameterType="hashMap">
+		UPDATE login_log set STAT = 1, IP = #{ip}
+		WHERE USER_NO IN (
+			SELECT LL.USER_NO 
+			FROM USERACCOUNT UA, LOGIN_LOG LL 
+			WHERE UA.USER_ID = LL.USER_NO AND UA.USER_ID = #{userId}
+		)
+	</update>
+	<update id="stat0" parameterType="int">
+		UPDATE login_log set STAT = 0 
+		WHERE USER_NO IN (
+			SELECT LL.USER_NO 
+			FROM USERACCOUNT UA, LOGIN_LOG LL 
+			WHERE UA.USER_ID = LL.USER_NO AND UA.USER_ID = #{userId}
+		)
+	</update>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

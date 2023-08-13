@@ -7,15 +7,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insert" parameterType="uservo">
 		insert into useraccount 
 		(user_id, user_firstname, user_lastname, user_email, user_password,user_salt, user_date, user_birth)
-		 values(user_seq.nextval, #{userFirstname}, #{userLastname}, #{email}, #{userPassword}, #{userSalt}, sysdate, #{userBirth})
+		 values(#{userId}, #{userFirstname}, #{userLastname}, #{email}, #{userPassword}, #{userSalt}, sysdate, #{userBirth})
 	</insert>
 	
 	<select id="getSalt" resultType="String" parameterType="String">
 		SELECT USER_SALT FROM USERACCOUNT WHERE USER_EMAIL = #{email}
 	</select>
 	
-	<select id="login" resultType="uservo" parameterType="uservo">
-		SELECT * FROM USERACCOUNT WHERE USER_EMAIL = #{email} AND USER_PASSWORD = #{userPassword}
+	<select id="login" resultType="Map" parameterType="uservo">
+		SELECT * FROM USERACCOUNT UA, LOGIN_LOG LL WHERE UA.USER_EMAIL = #{email} AND UA.USER_PASSWORD = #{userPassword} AND UA.USER_ID = LL.USER_NO
+	</select>
+	
+	<select id="nextSeq" resultType="int">
+		SELECT USER_SEQ.NEXTVAL FROM DUAL
 	</select>
 
 </mapper>

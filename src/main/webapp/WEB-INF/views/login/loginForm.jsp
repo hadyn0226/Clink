@@ -53,12 +53,20 @@
       if (xhr.readyState == 4 && xhr.status == 200) {
         //도착된 데이터를 읽어오기
         var data = xhr.responseText;
+        
         if (data == "-1") {
-        	alert("존재하지 않는 이메일 입니다")
+        	console.log(data);
+        	alert("존재하지 않는 이메일 입니다!")
         } else if(data == "0"){
-        	alert("비밀번호가 틀리셨습니다.")
-        }else{
+        	alert("비밀번호가 틀리셨습니다!")
+        }else if(data == "1"){
         	location.href="${ pageContext.request.contextPath }"
+        }else if(data == "-2"){
+            alert("로그인 실패 횟수 초과 하셨습니다!");
+        }else if(data == "2"){
+            alert("이미 로그인 되어있는 계정입니다");
+        }else if(data == "3"){
+        	alert("휴면 계정입니다");
         }
       }
     }

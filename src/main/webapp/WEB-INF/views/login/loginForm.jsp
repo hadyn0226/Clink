@@ -58,9 +58,7 @@
         var data = xhr.responseText;
         
         if (data == "-1") {
-        	alert("존재하지 않는 이메일 입니다!")
-        } else if(data == "0"){
-        	alert("비밀번호가 틀리셨습니다!")
+        	alert("이메일 혹은 비밀번호가 틀렸습니다.");
         }else if(data == "1"){
         	location.href="${ pageContext.request.contextPath }"
         }else if(data == "-2"){

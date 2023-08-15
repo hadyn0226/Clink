@@ -1,66 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans:beans
-	xmlns="http://www.springframework.org/schema/security"
-	xmlns:beans="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/security
-    http://www.springframework.org/schema/security/spring-security.xsd">
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
 
-	<!-- Security 설정 -->
-	<http auto-config="true" use-expressions="true">
-		<intercept-url pattern="/login" access="isAnonymous()" />
-		<intercept-url pattern="/loginForm" access="isAnonymous()" />
-		<form-login login-page="/login" default-target-url="/home"
-			authentication-failure-url="/login?error" />
-		<logout logout-success-url="/login?logout" />
-	</http>
+    <!-- 세션 관리를 위한 CustomSessionRegistry 설정 -->
+    <beans:bean id="csessionRegistry" class="sessionRegistry.CustomSessionRegistry" />
 
-	<!-- 인증 정보 설정 -->
-	<authentication-manager>
-		<authentication-provider
-			user-service-ref="loginService">
-			<password-encoder ref="passwordEncoder" />
-		</authentication-provider>
-	</authentication-manager>
+    <!-- Security 설정 -->
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/login" access="isAnonymous()" />
+        <intercept-url pattern="/loginForm" access="isAnonymous()" />
+        <form-login login-page="/login" default-target-url="/home" authentication-failure-url="/login?error" />
+        <logout logout-url="/logout" logout-success-url="/" />
 
-	<!-- Password Encoder 설정 -->
-	<beans:bean id="passwordEncoder"
-		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-
-	<!-- Define your custom authentication provider -->
-	<beans:bean id="customAuthenticationProvider"
-		class="provider.CustomAuthenticationProvider">
-		<!-- Inject any necessary dependencies -->
-		<beans:constructor-arg ref="loginService" />
-		<beans:constructor-arg ref="passwordEncoder" />
-	</beans:bean>
-
-	<!-- Define authenticationManager using ProviderManager -->
-	<beans:bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<beans:constructor-arg>
-			<beans:list>
-				<beans:ref bean="customAuthenticationProvider" />
-				<!-- You can add other AuthenticationProviders here if needed -->
-			</beans:list>
-		</beans:constructor-arg>
-	</beans:bean>
-
-	<!-- 세션 관리를 위한 SessionRegistry 설정 -->
-	<beans:bean id="sessionRegistry"
-		class="org.springframework.security.core.session.SessionRegistryImpl" />
-
-	<beans:bean id="concurrentSessionControlStrategy"
-		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
-		<beans:constructor-arg name="sessionRegistry"
-			ref="sessionRegistry" />
-		<beans:property name="maximumSessions"
-            value="1" />
-        <beans:property name="exceptionIfMaximumExceeded" value="true" />
-	</beans:bean>
+        <session-management invalid-session-url="/loginForm">
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+        </session-management>
+    </http>
 
 
+    <!-- 인증 정보 설정 -->
+    <authentication-manager>
+        <authentication-provider user-service-ref="loginService">
+            <password-encoder ref="passwordEncoder" />
+        </authentication-provider>
+    </authentication-manager>
 
+    <!-- Password Encoder 설정 -->
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+
+    <!-- Define your custom authentication provider -->
+    <beans:bean id="customAuthenticationProvider" class="provider.CustomAuthenticationProvider">
+        <beans:constructor-arg ref="loginService" />
+        <beans:constructor-arg ref="passwordEncoder" />
+    </beans:bean>
+
+    <!-- Define authenticationManager using ProviderManager -->
+    <beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+        <beans:constructor-arg>
+            <beans:list>
+                <beans:ref bean="customAuthenticationProvider" />
+            </beans:list>
+        </beans:constructor-arg>
+    </beans:bean>
 </beans:beans>

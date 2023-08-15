@@ -45,15 +45,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
         }
         
         
-        try {
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
-        } catch (SessionAuthenticationException e) {
-            // 동시 세션 제어 예외 처리 로직을 추가하세요.
-            // 예를 들어, 중복 로그인 방지 처리나 사용자에게 안내 메시지를 보여주는 등의 작업을 수행할 수 있습니다.
-            throw new AuthenticationException("Concurrent session control exception") {
-                // Custom exception handling logic here
-            };
-        }
 	}
 
 	@Override

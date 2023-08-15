@@ -5,12 +5,10 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +38,9 @@ public class LoginController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private SessionRegistry csessionRegistry;
 
 	public LoginController(LoginService loginService) {
 		this.loginService = loginService;
@@ -216,26 +218,32 @@ public class LoginController {
 	public ResponseEntity<String> checkLogin(HttpServletRequest request, HttpServletResponse response, UserVO vo) {
 		String username = vo.getUserEmail();
 		String password = vo.getPassword();
-		System.out.println(vo);
-		System.out.println("password : " + password);
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 
 		try {
 			Authentication authentication = authenticationManager.authenticate(token);
-			System.out.println("controller : " + authentication);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
 			HttpSession session = request.getSession();
 			if (session != null) {
-				Authentication authentication2 = (Authentication) session
-						.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-				if (authentication2 != null) {
-					UserVO vo2 = (UserVO) authentication.getPrincipal();
-				}
+				System.out.println("session id : " + session.getId());
+				csessionRegistry.registerNewSession(session.getId(), authentication.getPrincipal());
+//				Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
+//				System.out.println(authentication2);
+//				if (authentication2 != null) {
+//					UserVO vo2 = (UserVO) authentication2.getPrincipal();
+//					
+//					System.out.println("session principal count : " + getActiveSessionCount());
+//					System.out.println("vo2 : " + vo2);
+//				}
 			}
+			System.out.println("session count : " + getActiveSessionCount());
 			return ResponseEntity.ok("1");
 		} catch (org.springframework.security.core.AuthenticationException e) {
 			System.err.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("-1");
+		} catch(IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("2");
 		}
 	}
 
@@ -286,6 +294,16 @@ public class LoginController {
 		}
 
 		return ip;
+	}
+	
+	public int getActiveSessionCount() {
+	    int activeSessions = 0;
+	    
+	    for (Object principal : csessionRegistry.getAllPrincipals()) {
+	        activeSessions += csessionRegistry.getAllSessions(principal, false).size();
+	    }
+	    
+	    return activeSessions;
 	}
 
 }

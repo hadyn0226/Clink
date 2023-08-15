@@ -14,6 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT USER_SALT FROM USERACCOUNT WHERE USER_EMAIL = #{email}
 	</select>
 	
+	<select id="getUser" resultType="uservo" parameterType="String">
+		SELECT * FROM USERACCOUNT WHERE USER_EMAIL = #{email}
+	</select>
+	
 	<select id="login" resultType="Map" parameterType="uservo">
 		SELECT * FROM USERACCOUNT UA, LOGIN_LOG LL WHERE UA.USER_EMAIL = #{email} AND UA.USER_PASSWORD = #{userPassword} AND UA.USER_ID = LL.USER_NO
 	</select>

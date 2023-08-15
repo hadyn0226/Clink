@@ -12,6 +12,7 @@
 	<bean id="loginService" class="service.login.LoginService">
 		<constructor-arg ref="UserDao"></constructor-arg>
 		<constructor-arg ref="LoginLogDao"></constructor-arg>
+		<property name="passwordEncoder" ref="passwordEncoder"></property>
 	</bean>
 	
 </beans>

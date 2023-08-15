@@ -28,4 +28,8 @@ public class UserDAO {
 	public int nextSeq() {
 		return sqlSession.selectOne("user.nextSeq");
 	}
+	
+	public UserVO getUser(String email) {
+		return sqlSession.selectOne("user.getUser", email);
+	}
 }

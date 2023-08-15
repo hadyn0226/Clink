@@ -16,22 +16,10 @@
 <div align="center">
 		<div class="header">
  			<c:choose>
-				<c:when test="${!empty login }">
+				<c:when test="${!empty SPRING_SECURITY_CONTEXT.authentication }">
 					<a href="${pageContext.request.contextPath }/user/mypage">MyPage</a> | 
-					<a href="${pageContext.request.contextPath }/logout">Logout</a> | 
-					<script type="text/javascript">
-						function exit(e) {
-							console.log("screepTop",self.screenTop);
-							let no = ${login};
-							var url = "${pageContext.request.contextPath}/exit";
-      						var param = "";
-      						sendRequest(url, param, none, "POST");
-						}
-						function none() {
-							
-						}
-						window.addEventListener('onclose',exit());
-					</script>
+					<a href="${pageContext.request.contextPath }/logout">Logout</a> |
+					<!-- ${SPRING_SECURITY_CONTEXT.authentication.principal.userId} -->
 				</c:when>
 				<c:otherwise>
 					<a href="${pageContext.request.contextPath }/loginForm">Login</a> | 

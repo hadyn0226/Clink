@@ -5,7 +5,7 @@
         <table name="table">
             <tr>
                 <th>ID</th>
-                <td><input type="text" name="email" id="email" value="${id }"></td>
+                <td><input type="text" name="userEmail" id="userEmail" value="${id }"></td>
             </tr>
             <tr>
                 <th>PW</th>
@@ -32,7 +32,7 @@
 <a href="${ pageContext.request.contextPath }/login/findform?mode=id">ID찾기</a> | 
 <a href="${ pageContext.request.contextPath }/login/findform?mode=pw">PW재설정</a> 
 <script type="text/javascript">
-    const loginID = document.getElementById("email");
+    const loginID = document.getElementById("userEmail");
     const loginPW = document.getElementById("userPassword");
     const loginCK = document.getElementById("ckid");
     function checkId() {
@@ -44,18 +44,20 @@
         return;
       }
       var url = "${pageContext.request.contextPath}/login";
-      var param = "email=" + encodeURIComponent(loginID.value) +"&&userPassword=" + encodeURIComponent(loginPW.value) + "&&ckid=" + encodeURIComponent(loginCK.value);
+      var param = "userEmail=" + encodeURIComponent(loginID.value) +"&&userPassword=" + encodeURIComponent(loginPW.value) + "&&ckid=" + encodeURIComponent(loginCK.value);
 
       sendRequest(url, param, resultFn, "POST");
     }
 
     function resultFn() {
+    	console.log(xhr.responseText);
+    	console.log(xhr.readyState);
+    	console.log(xhr.status);
       if (xhr.readyState == 4 && xhr.status == 200) {
         //도착된 데이터를 읽어오기
         var data = xhr.responseText;
         
         if (data == "-1") {
-        	console.log(data);
         	alert("존재하지 않는 이메일 입니다!")
         } else if(data == "0"){
         	alert("비밀번호가 틀리셨습니다!")

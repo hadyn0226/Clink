@@ -5,4 +5,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="actlog">
 	<!-- SQL문들을 작성하는 파일 -->
 
+	<insert id="insert" parameterType="actlogvo">
+		INSERT INTO ACT_LOG VALUES(ACTLOG_SEQ.NEXTVAL, #{memberNo}, #{featureNo}, #{targetNo}, SYSDATE)
+	</insert>
+
+	<update id="update" parameterType="actlogvo">
+		UPDATE ACT_LOG SET TARGET_NO = #{targetNo} WHERE LOGACT_NO = #{logactNo}
+	</update>
+
+	<select id="selectAll" resultType="actlogvo">
+		SELECT * FROM ACT_LOG
+	</select>
+
+	<delete id="delete">
+		DELETE ACT_LOG WHERE LOGACT_NO = #{logactNo}
+	</delete>
+
 </mapper>

@@ -4,5 +4,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="bigcate">
 	<!-- SQL문들을 작성하는 파일 -->
-
+	
+	<insert id="insert" parameterType="bigcatevo">
+		INSERT INTO BIG_CATE VALUES(BIGCATE_SEQ.NEXTVAL, #{summary})
+	</insert>
+	
+	<update id="update" parameterType="bigcatevo">
+		UPDATE BIG_CATE SET SUMMARY = #{summary} WHERE BIGCATE_NO = #{bigcateNo}
+	</update>
+	
+	<select id="selectAll" resultType="bigcatevo">
+		SELECT * FROM BIG_CATE
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		DELETE BIG_CATE WHERE BIGCATE_NO = #{bigcateNo}
+	</delete>
+	
 </mapper>

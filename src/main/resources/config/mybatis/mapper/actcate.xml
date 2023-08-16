@@ -5,4 +5,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="actcate">
 	<!-- SQL문들을 작성하는 파일 -->
 
+	<insert id="insert" parameterType="actcatevo">
+		INSERT INTO ACT_CATE VALUES(ACTCATE_SEQ.NEXTVAL, #{uuid}, #{summary}, #{bigcate})
+	</insert>
+
+	<update id="update" parameterType="actcatevo">
+		UPDATE ACT_CATE SET SUMMARY = #{summary} WHERE ACTCATE_NO = #{actcateNo}
+	</update>
+
+	<select id="selectAll" resultType="actcatevo">
+		SELECT * FROM ACT_CATE
+	</select>
+
+	<delete id="delete" parameterType="int">
+		DELETE ACT_CATE WHERE ACTCATE_NO = #{actcateNo}
+	</delete>
+
 </mapper>

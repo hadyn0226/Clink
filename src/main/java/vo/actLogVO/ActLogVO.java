@@ -5,7 +5,7 @@ public class ActLogVO {
 	private int logactNo;
 	private int memberNo;
 	private int featureNo;
-	private int target;
+	private int targetNo;
 	private String actDate;
 	
 	public ActLogVO() {
@@ -36,12 +36,12 @@ public class ActLogVO {
 		this.featureNo = featureNo;
 	}
 
-	public int getTarget() {
-		return target;
+	public int getTargetNo() {
+		return targetNo;
 	}
 
-	public void setTarget(int target) {
-		this.target = target;
+	public void setTargetNo(int targetNo) {
+		this.targetNo = targetNo;
 	}
 
 	public String getActDate() {

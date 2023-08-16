@@ -2,18 +2,29 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
-	
+
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<!-- dao 설정 -->
-<!-- 	<bean id="deptDao" class="dao.DeptDAO">
-		<property name="sqlSession" ref="sqlSession"/>
-	</bean> -->
-		
-		<bean id="UserDao" class="dao.userDAO.UserDAO">
-			<constructor-arg ref="sqlSession"></constructor-arg>	
-		</bean>
-		<bean id="LoginLogDao" class="dao.loginLogDAO.LoginLogDAO">
-			<constructor-arg ref="sqlSession"></constructor-arg>
-		</bean>
-		
+	<!-- <bean id="deptDao" class="dao.DeptDAO"> <property name="sqlSession" 
+		ref="sqlSession"/> </bean> -->
+
+	<bean id="UserDao" class="dao.userDAO.UserDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+	<bean id="LoginLogDao" class="dao.loginLogDAO.LoginLogDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
+	<bean id="ActLogDao" class="dao.actLogDAO.ActLogDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
+	<bean id="ActCateDao" class="dao.actCateDAO.ActCateDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
+	<bean id="BigCateDao" class="dao.bigCateDAO.BigCateDAO">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
 </beans>

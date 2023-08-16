@@ -28,11 +28,11 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication(); //세션에서 현재 인증을 가져옴
+//		Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication(); //세션에서 현재 인증을 가져옴
 		
-		System.out.println(authentication2); //인증 출력
-		Object obj = authentication2.getPrincipal(); //인증에서 객체를 가져옴 
-		System.out.println(obj); 
+//		System.out.println(authentication2); //인증 출력
+//		Object obj = authentication2.getPrincipal(); //인증에서 객체를 가져옴 
+//		System.out.println(obj); 
 		/*
 		 * 출력 예
 		 * 
@@ -45,9 +45,9 @@ public class HomeController {
 		 */
 		
 		
-		if(obj.getClass().equals(new UserVO().getClass())) { //인즌에서 가져온 객체가 UserVo클래스인지 확인
-			System.out.println(((UserVO)obj).getUserId());//Uservo일경우 getUserId()메소드 사용하여 값 가져오기
-		}
+//		if(obj.getClass().equals(new UserVO().getClass())) { //인즌에서 가져온 객체가 UserVo클래스인지 확인
+//			System.out.println(((UserVO)obj).getUserId());//Uservo일경우 getUserId()메소드 사용하여 값 가져오기
+//		}
 		return "/WEB-INF/views/home.jsp";
 	}
 	

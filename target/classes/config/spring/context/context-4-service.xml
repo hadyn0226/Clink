@@ -15,4 +15,10 @@
 		<property name="passwordEncoder" ref="passwordEncoder"></property>
 	</bean>
 	
+	<bean id="actLogService" class="service.actLog.ActLogService">
+		<constructor-arg ref="ActLogDao"></constructor-arg>
+		<constructor-arg ref="ActCateDao"></constructor-arg>
+		<constructor-arg ref="BigCateDao"></constructor-arg>
+	</bean>
+	
 </beans>

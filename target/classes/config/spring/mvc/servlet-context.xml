@@ -27,6 +27,10 @@
 		<beans:constructor-arg ref="loginService"></beans:constructor-arg>
 	</beans:bean>
 	
+	<beans:bean class="controller.actLogTest.ActLogTestController">
+		<beans:constructor-arg ref="actLogService"></beans:constructor-arg>
+	</beans:bean>
+	
 <!-- 	<beans:bean class="controller.DeptController">
 		<beans:constructor-arg ref="deptService"/>
 	</beans:bean> -->

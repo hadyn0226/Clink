@@ -219,13 +219,14 @@ public class LoginController {
 		String username = vo.getUserEmail();
 		String password = vo.getPassword();
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
+		
 		try {
 			Authentication authentication = authenticationManager.authenticate(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
+			Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
+			System.out.println(authentication2);
 			String ckid = request.getParameter("ckid");
 			System.out.println("ckid : " + ckid);
-
 			Cookie ck = null;
 			Cookie[] cks = request.getCookies();
 
@@ -265,19 +266,6 @@ public class LoginController {
 						response.addCookie(ck);
 					}
 				}
-			}
-			HttpSession session = request.getSession();
-			if (session != null) {
-				System.out.println("session id : " + session.getId());
-				csessionRegistry.registerNewSession(session.getId(), authentication.getPrincipal());
-//				Authentication authentication2 = SecurityContextHolder.getContext().getAuthentication();
-//				System.out.println(authentication2);
-//				if (authentication2 != null) {
-//					UserVO vo2 = (UserVO) authentication2.getPrincipal();
-//					
-//					System.out.println("session principal count : " + getActiveSessionCount());
-//					System.out.println("vo2 : " + vo2);
-//				}
 			}
 			System.out.println("session count : " + getActiveSessionCount());
 			return ResponseEntity.ok("1");

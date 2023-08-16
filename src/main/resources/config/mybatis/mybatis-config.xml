@@ -17,11 +17,17 @@
 		<!-- <typeAlias type="vo.BoardVo" alias="board"/> -->
 		<typeAlias type="vo.userVO.UserVO" alias="uservo"/>
 		<typeAlias type="vo.loginLogVO.LoginLogVO" alias="loginlogvo"/>
+		<typeAlias type="vo.actCateVO.ActCateVO" alias="actcatevo"/>
+		<typeAlias type="vo.actLogVO.ActLogVO" alias="actlogvo"/>
+		<typeAlias type="vo.bigCateVO.BigCateVO" alias="bigcatevo"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="config/mybatis/mapper/userAccount.xml"/>
 		<mapper resource="config/mybatis/mapper/loginLog.xml" />
+		<mapper resource="config/mybatis/mapper/actlog.xml" />
+		<mapper resource="config/mybatis/mapper/actcate.xml" />
+		<mapper resource="config/mybatis/mapper/bigcate.xml" />
 		<!-- <mapper resource="config/mybatis/mapper/dept.xml"/> -->
 		<!-- <mapper resource="config/mybatis/mapper/board_select.xml" />
 		<mapper resource="config/mybatis/mapper/board_insert.xml" />

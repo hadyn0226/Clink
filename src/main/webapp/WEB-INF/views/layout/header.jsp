@@ -16,7 +16,7 @@
 <div align="center">
 		<div class="header">
  			<c:choose>
-				<c:when test="${!empty SPRING_SECURITY_CONTEXT.authentication }">
+				<c:when test="${!empty SPRING_SECURITY_CONTEXT.authentication }"> 
 					<a href="${pageContext.request.contextPath }/user/mypage">MyPage</a> | 
 					<a href="${pageContext.request.contextPath }/logout">Logout</a> |
 					<!-- ${SPRING_SECURITY_CONTEXT.authentication.principal.userId} -->

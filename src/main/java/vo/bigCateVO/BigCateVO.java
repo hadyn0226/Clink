@@ -1,11 +1,11 @@
-package vo.bigCate;
+package vo.bigCateVO;
 
-public class BigCate {
+public class BigCateVO {
 	
 	private int bigcateNo;
 	private String summary;
 	
-	public BigCate() {
+	public BigCateVO() {
 		super();
 	}
 

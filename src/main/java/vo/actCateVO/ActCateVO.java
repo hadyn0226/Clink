@@ -1,4 +1,4 @@
-package vo.actCate;
+package vo.actCateVO;
 
 public class ActCateVO {
 

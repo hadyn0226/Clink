@@ -1,8 +1,14 @@
 package sessionRegistry;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import vo.userVO.UserVO;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,16 +18,18 @@ public class CustomSessionRegistry extends SessionRegistryImpl {
 
 	@Override
 	public void registerNewSession(String sessionId, Object principal) {
-		System.out.println("principal = " + principal);
-		System.out.println("existingSession = " + getAllSessions(principal, false));
-		System.out.println(getAllPrincipals());
-		for (SessionInformation existingSession : getAllSessions(principal, false)) {
-			if (existingSession.getPrincipal().equals(principal)) {
-				UserDetails userDetails = (UserDetails) existingSession.getPrincipal();
-				logger.info("Logging out user: " + userDetails.getUsername() + " due to duplicate login.");
-				existingSession.expireNow();
-				throw new IllegalArgumentException("User is already logged in");
+		List<?> principals = getAllPrincipals();
+		for(Object prinObject : principals) {
+			System.out.println(((UserVO)prinObject).getUserEmail());
+			if(((UserVO)prinObject).getUserEmail().equals(((UserVO)principal).getUserEmail())){
+				
+				List<SessionInformation> sessionInformationList = getAllSessions(prinObject, false);
+				for (int i = 0; i < sessionInformationList.size(); i++) {
+					sessionInformationList.get(i).expireNow();
+					System.out.println(sessionInformationList.get(i).isExpired());
+				}
 			}
+			
 		}
 		super.registerNewSession(sessionId, principal);
 	}

@@ -305,5 +305,11 @@ public class LoginController {
 	    
 	    return activeSessions;
 	}
+	
+	@RequestMapping("/expired")
+	public String expired() {
+		System.out.println("session is expired");
+		return ViewPath.HOME;
+	}
 
 }

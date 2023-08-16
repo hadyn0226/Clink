@@ -14,7 +14,7 @@ pageEncoding="UTF-8"%>
           </tr>
           <tr>
             <th>이메일</th>
-            <td><input type="text" name="email" onchange="emailFalse()" /></td>
+            <td><input type="text" name="userEmail" onchange="emailFalse()" /></td>
             <th>
               <button type="button" onclick="checkId(this.form)">
                 중복확인
@@ -49,13 +49,13 @@ pageEncoding="UTF-8"%>
     let emailChecker = false;
     let notChecker = true;
     function checkId(f) {
-      if (f.email.value == "") {
+      if (f.userEmail.value == "") {
         alert("아이디를 입력하십시오!");
         return;
       }
       notChecker = false;
       var url = "${pageContext.request.contextPath}/checkId";
-      var param = "id=" + encodeURIComponent(f.email.value);
+      var param = "id=" + encodeURIComponent(f.userEmail.value);
 
       sendRequest(url, param, resultFn, "POST");
     }
@@ -69,7 +69,7 @@ pageEncoding="UTF-8"%>
         alert("이름을 입력해 주세요");
         f.userLastname.focus();
         return;
-      } else if (f.email.value == "") {
+      } else if (f.userEmail.value == "") {
         alert("이메일을 입력해 주세요");
         f.email.focus();
         return;

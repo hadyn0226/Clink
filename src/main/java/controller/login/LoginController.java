@@ -223,7 +223,49 @@ public class LoginController {
 		try {
 			Authentication authentication = authenticationManager.authenticate(token);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
-			
+			String ckid = request.getParameter("ckid");
+			System.out.println("ckid : " + ckid);
+
+			Cookie ck = null;
+			Cookie[] cks = request.getCookies();
+
+			if (cks != null) {
+				for (Cookie c : cks) {
+					if (c.getName().equals("ckid")) {
+						ck = c;
+						break;
+					}
+				}
+			}
+
+			if (ckid.equals("true")) { //
+				if (ck == null) { //
+					ck = new Cookie("ckid", vo.getUserEmail());
+
+					//
+					ck.setPath("/");
+
+					//
+					ck.setMaxAge(60 * 60 * 24);
+
+					//
+					response.addCookie(ck);
+				} else { //
+					if (!ck.getValue().equals(vo.getUserEmail())) {
+						ck.setValue(vo.getUserEmail());
+						ck.setPath("/");
+						response.addCookie(ck);
+					}
+				}
+			}else{ // 泥댄겕 �븞�릺�뼱 �엳�쓣�븣
+				if(ck != null){
+					if(ck.getValue().equals(vo.getUserEmail())){
+						ck.setPath("/");
+						ck.setMaxAge(0);
+						response.addCookie(ck);
+					}
+				}
+			}
 			HttpSession session = request.getSession();
 			if (session != null) {
 				System.out.println("session id : " + session.getId());
@@ -241,7 +283,7 @@ public class LoginController {
 			return ResponseEntity.ok("1");
 		} catch (org.springframework.security.core.AuthenticationException e) {
 			System.err.println(e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("-1");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
 		} catch(IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("2");
 		}

@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 
 import service.login.LoginService;
+import vo.loginLogVO.LoginLogVO;
 import vo.userVO.UserVO;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider{
@@ -35,14 +36,24 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
             userDetails = loginService.loadUserByUsername(username);
             
             UserVO vo = (UserVO) userDetails;
-            System.out.println(vo);
+            LoginLogVO loginLogVO = loginService.getLog(vo.getUserId());
+            if(loginLogVO.getFailCnt() >= 5) {
+            	throw new BadCredentialsException("-2");
+            }
+            if(vo.getUserStatus() == 2) {
+            	throw new BadCredentialsException("3");
+            }
+            
         } catch (UsernameNotFoundException e) {
-            throw new BadCredentialsException("Invalid username or password");
+            throw new BadCredentialsException("-1");
         }
 
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
+        	loginService.increFail(username);
+            throw new BadCredentialsException("-1");
         }
+        
+        
         
         
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());

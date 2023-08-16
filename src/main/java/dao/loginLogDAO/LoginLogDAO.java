@@ -28,4 +28,8 @@ private SqlSession sqlSession;
 	public int statOut(int userId) {
 		return sqlSession.update("loginLog.stat0", userId);
 	}
+	
+	public LoginLogVO getLog(int userNo) {
+		return sqlSession.selectOne("loginLog.getLog", userNo);
+	}
 }

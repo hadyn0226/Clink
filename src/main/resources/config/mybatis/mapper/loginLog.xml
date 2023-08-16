@@ -31,6 +31,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			WHERE UA.USER_ID = LL.USER_NO AND UA.USER_ID = #{userId}
 		)
 	</update>
+	
+	<select id="getLog" parameterType="int" resultType="loginlogvo">
+		SELECT * FROM LOGIN_LOG WHERE USER_NO = #{userNo}
+	</select>
 </mapper>
 
 

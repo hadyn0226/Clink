@@ -73,9 +73,7 @@ public class LoginService implements UserDetailsService{
 		if(user == null) {
 			throw new UsernameNotFoundException("User not found: " + username);
 		}
-		System.out.println("service : " + user.getUserEmail());
-		System.out.println("service : " + user.getPassword());
-		return new UserVO(user.getUserId(), user.getUserEmail(), user.getUserPassword(), user.getAuthorities());
+		return new UserVO(user.getUserId(), user.getUserEmail(), user.getUserPassword(), user.getUserStatus(),user.getAuthorities());
 	}
 	
 	public PasswordEncoder getPasswordEncoder() {
@@ -84,5 +82,9 @@ public class LoginService implements UserDetailsService{
 
 	public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
 		this.passwordEncoder = passwordEncoder;
+	}
+	
+	public LoginLogVO getLog(int userNo) {
+		return this.loginLogDAO.getLog(userNo);
 	}
 }

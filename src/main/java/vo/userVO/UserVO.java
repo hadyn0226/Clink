@@ -18,6 +18,7 @@ public class UserVO implements UserDetails {
 	private String userDate;
 	private String userBirth;
 	private Collection<? extends GrantedAuthority> authorities;
+	private int userStatus;
 
 	public UserVO() {
 		super();
@@ -25,12 +26,13 @@ public class UserVO implements UserDetails {
 	
 	
 
-	public UserVO(int userId,String userEmail, String userPassword, Collection<? extends GrantedAuthority> authorities) {
+	public UserVO(int userId,String userEmail, String userPassword, int userStatus, Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.userId = userId;
 		this.userEmail = userEmail;
 		this.userPassword = userPassword;
 		this.authorities = authorities;
+		this.userStatus = userStatus;
 	}
 
 
@@ -98,6 +100,18 @@ public class UserVO implements UserDetails {
 	public void setUserSalt(String userSalt) {
 		this.userSalt = userSalt;
 	}
+	
+	public int getUserStatus() {
+		return userStatus;
+	}
+
+
+
+	public void setUserStatus(int userStatus) {
+		this.userStatus = userStatus;
+	}
+
+
 
 	@Override
 	public String toString() {
@@ -110,7 +124,7 @@ public class UserVO implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
-		// »ç¿ëÀÚ°¡ "ROLE_USER" ·ÑÀ» °¡Áö°í ÀÖ´Ù°í °¡Á¤ÇÏ¿© ÇØ´ç ±ÇÇÑÀ» Ãß°¡ÇÕ´Ï´Ù.
+		// ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ "ROLE_USER" ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Õ´Ï´ï¿½.
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
 		return authorities;
